@@ -7,12 +7,6 @@ interface RequestBody {
     password: string;
 }
 
-interface Payload {
-    userId: string;
-    email: string;
-}
-
-
 export const POST = async(req:NextRequest,res:NextResponse): Promise<NextResponse> => {
     const {email,password}: RequestBody = await req.json()
 try {
