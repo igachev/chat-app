@@ -9,6 +9,7 @@ export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const [username, setUsername] = React.useState('')
   const [verifying, setVerifying] = React.useState(false);
   const [code, setCode] = React.useState('');
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function Page() {
         await setActive({ session: completeSignUp.createdSessionId });
         await fetch("/api/register",{
             method: 'POST',
-            body: JSON.stringify({email:emailAddress,password:password})
+            body: JSON.stringify({email:emailAddress,password:password,username:username})
         })
         router.push('/');
       } else {
@@ -113,6 +114,16 @@ export default function Page() {
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+        <div>
+          <label htmlFor="username">Enter username</label>
+          <input
+            id="username"
+            type="text"
+            name="username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
         </div>
         <div>
