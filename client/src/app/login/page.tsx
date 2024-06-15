@@ -33,10 +33,15 @@ const LoginPage = () => {
       // and redirect the user
       if (signInAttempt.status === 'complete') {
         
-        
-
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push('/');
+       const response = await fetch("/api/login",{
+          method: "POST",
+          body: JSON.stringify({email,password})
+        })
+        const result = await response.json()
+        localStorage.setItem("userData",JSON.stringify(result))
+        
+        router.push('/chat');
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
