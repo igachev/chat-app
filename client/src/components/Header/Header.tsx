@@ -1,11 +1,17 @@
 "use client"
 import { UserButton, useAuth } from '@clerk/nextjs'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Header = () => {
 
   const { isSignedIn,userId } = useAuth();
+
+  useEffect(() => {
+    if(!isSignedIn) {
+      localStorage.removeItem('userData')
+    }
+  },[isSignedIn])
     
   return (
     <>
