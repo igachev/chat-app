@@ -7,6 +7,11 @@ interface RequestBody {
     password: string;
 }
 
+interface UserData {
+    userId: string;
+    username: string;
+}
+
 export const POST = async(req:NextRequest,res:NextResponse): Promise<NextResponse> => {
     const {email,password}: RequestBody = await req.json()
 try {
@@ -23,8 +28,9 @@ try {
         throw new Error("Invalid username or password")
     }
 
-    const response = NextResponse.json({message: 'Login successful'},{status: 200})
-    
+    const userData: UserData = {userId: user._id, username: user.username}
+
+    const response = NextResponse.json(userData,{status: 200})
     return response
 
 } catch (err: any) {
