@@ -45,7 +45,10 @@ const [receiver,setReceiver] = useState<string>("")
 const [isConnected, setIsConnected] = useState(false);
 const [transport, setTransport] = useState("N/A");
 const [typing,setTyping] = useState<boolean>(false)
+// currentUserIsTyping is used to 
+const [currentUserIsTyping,setCurrentUserIsTyping] = useState<boolean>(false)
 const [selectedChatId,setSelectedChatId] = useState<string>("")
+const [toUser,setToUser] = useState<string>("")
 
 useEffect(() => {
   const userDataString = localStorage?.getItem("userData");
@@ -61,8 +64,8 @@ useEffect(() => {
     socket.on('receiveMessage', (message) => {
       setMessages((prevMessages) => [...prevMessages, message]);
     });
-    socket.on("typing", () => setTyping(true));
-    socket.on("stop typing", () => setTyping(false));
+    socket.on("typing", () => setCurrentUserIsTyping(true));
+    socket.on("stop typing", () => setCurrentUserIsTyping(false));
   }
 
   function onConnect() {
@@ -121,6 +124,10 @@ async function openChat(to: string) {
     const receivedMessages = await getMessages.json()
     setMessages(receivedMessages)
     setReceiver(to)
+    let sendingToUser = users.find((user) => user._id === to)
+    if(sendingToUser != undefined) {
+      setToUser(sendingToUser.username)
+    }
   } catch (err) {
     console.log(err)
   }
@@ -205,7 +212,7 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
               {messages.length > 0 && messages.map((message) => (
                 <Card key={message._id} className="w-5/6">
                   <CardHeader>
-                    <CardTitle>{message.sender.username}</CardTitle>
+                    <CardTitle>{userData?.username === message.sender.username ? "You" : message.sender.username}</CardTitle>
                     <CardDescription>{message.text}</CardDescription>
                   </CardHeader>
                 </Card>
@@ -213,7 +220,7 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
             </div>
 
             <div className="w-4/6 m-2">
-            {typing && <div>Typing...</div>}
+            {currentUserIsTyping && toUser && <div>{toUser} is typing...</div>}
               <form method="post" onSubmit={sendMessage}>
                 <Input type="text"
                  className="w-4/6 focus-visible:ring-1"

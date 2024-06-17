@@ -37,8 +37,8 @@ app.prepare().then(() => {
       }
 
       chat.participants.forEach((participant) => {
-        socket.in(participant._id).emit("receiveMessage",message)
-        
+        if (participant._id == message.sender._id) return;
+        socket.in(participant._id).emit("receiveMessage",message) 
       })
        // io.emit('receiveMessage', message);
       });
