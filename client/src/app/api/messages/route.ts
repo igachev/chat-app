@@ -34,8 +34,10 @@ export const POST = async (req: NextRequest, res: NextResponse): Promise<NextRes
         });
 
         await newMessage.save();
-
-        return NextResponse.json(newMessage, { status: 201 });
+        let message = await newMessage.populate("chat")
+        message = await message.populate('sender')
+      //  const populatedMessage = await Message.findById(newMessage._id).populate('chat');
+        return NextResponse.json(message, { status: 201 });
     } catch (err: any) {
         return NextResponse.json({ message: err.message }, { status: 500 });
     }
