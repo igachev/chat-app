@@ -12,9 +12,17 @@ const handler = app.getRequestHandler();
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
-  const io = new Server(httpServer);
+  const io = new Server(httpServer,{
+    pingTimeout: 60000
+  });
 
   io.on("connection", (socket) => {
+
+    socket.on("setup", (userData) => {
+   //   console.log(userData)
+      socket.join(userData.userId)
+      socket.emit("connected")
+    })
 
     socket.on("join chat", (room) => {
       socket.join(room);
@@ -30,15 +38,15 @@ app.prepare().then(() => {
     });
 
     socket.on('sendMessage', (message) => {
-      let chat = message.chat;
-
-      if(!chat.participants) {
+      const chat = message.chat;
+      if(!chat || !chat.participants) {
         return console.log("chat.participants are not defined")
       }
-
+     // console.log(message)
       chat.participants.forEach((participant) => {
-        if (participant._id == message.sender._id) return;
-        socket.in(participant._id).emit("receiveMessage",message) 
+        if(participant == message.sender._id) return
+        socket.in(participant).emit("receiveMessage",message) 
+        
       })
        // io.emit('receiveMessage', message);
       });
