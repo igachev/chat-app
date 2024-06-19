@@ -54,6 +54,7 @@ useEffect(() => {
   const userDataString = localStorage?.getItem("userData");
   if (userDataString) {
       const userData = JSON.parse(userDataString);
+      socket.emit("setup",userData)
       setUserData(userData);
   }
 },[])
@@ -61,11 +62,7 @@ useEffect(() => {
 useEffect(() => {
   if (socket.connected) {
     onConnect();
-    socket.on('receiveMessage', (message) => {
-      setMessages((prevMessages) => [...prevMessages, message]);
-    });
-    socket.on("typing", () => setCurrentUserIsTyping(true));
-    socket.on("stop typing", () => setCurrentUserIsTyping(false));
+  
   }
 
   function onConnect() {
@@ -84,12 +81,18 @@ useEffect(() => {
 
   socket.on("connect", onConnect);
   socket.on("disconnect", onDisconnect);
+  
+  socket.on("connected",() => console.log("connected"))
+  socket.on('receiveMessage', (message) => setMessages((prevMessages) =>  [...prevMessages,message])); 
+  socket.on("typing", () => setCurrentUserIsTyping(true));
+  socket.on("stop typing", () => setCurrentUserIsTyping(false));
 
   return () => {
     socket.off("connect", onConnect);
     socket.off("disconnect", onDisconnect);
   };
-}, []);
+},[]);
+
 
 useEffect(() => {
 
@@ -138,23 +141,19 @@ async function sendMessage(e:React.FormEvent) {
     e.preventDefault();
     const messageSent = await fetch("/api/messages", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({from: userData?.userId, to:receiver, text: newMessage})
     })
     const messageResult = await messageSent.json()
     if (socket) {
-      socket.emit('sendMessage', {
-        from: userData?.userId,
-        to: receiver,
-        text: newMessage,
-        sender: {
-          username: userData?.username
-        },
-        _id: messageResult._id
-      });
+      socket.emit('sendMessage',messageResult);
+      socket.emit("stop typing",messageResult.chat._id)
     }
   //  const getMessages = await fetch(`/api/messages?from=${userData?.userId}&to=${receiver}`)
   //  const receivedMessages = await getMessages.json()
-  //  setMessages(receivedMessages)
+    setMessages((messages) => [...messages,messageResult])
     setNewMessage("")
   } catch (err) {
     console.log(err)
@@ -182,10 +181,10 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
 };
 
   return (
-    <div className="min-h-[900px] bg-slate-600 relative">
+    <div className="min-h-[900px] bg-slate-400 relative">
         
         <h1>Chat Page</h1>
-        <div className=" flex flex-wrap justify-center gap-2 mx-auto p-2 bg-purple-500 w-3/5 min-w-[230px] items-center">
+        <div className="absolute right-1 flex flex-wrap flex-col justify-center gap-2 p-2 bg-purple-50  min-w-[230px] h-3/6 items-center overflow-y-scroll rounded-md shadow-2xl">
         
         {users.length > 0 && users.map((user) => {
            if(user._id !== userData?.userId) {
@@ -206,9 +205,9 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
         </div>
 
         {isChatOpen ? (
-          <div className="bg-green-500 absolute bottom-0 w-3/6">
+          <div className="bg-green-500 absolute bottom-0 w-3/6 h-2/6 overflow-y-scroll">
 
-            <div className="bg-blue-400 w-4/6 p-2">
+            <div className="bg-blue-400 w-full p-2 flex flex-col items-center gap-2">
               {messages.length > 0 && messages.map((message) => (
                 <Card key={message._id} className="w-5/6">
                   <CardHeader>
