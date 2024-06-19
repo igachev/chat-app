@@ -204,9 +204,15 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
         </div>
 
         {isChatOpen ? (
-          <div className="bg-orange-800 absolute bottom-2 left-2 w-3/6 min-w-[400px] h-2/6 overflow-y-scroll">
+          
 
-            <div className="bg-orange-200 w-full  p-2 flex flex-col items-center gap-2">
+<div className="bg-orange-800 absolute bottom-2 left-2 w-3/6 min-w-[400px] h-2/6 overflow-y-scroll">
+            
+            <div className="bg-orange-200 w-full p-2 flex flex-col items-center gap-2">
+            
+              <div className="w-full flex justify-end">
+              <Button className="fixed" onClick={() => setIsChatOpen(false)}>X</Button>
+              </div>
               {messages.length > 0 && messages.map((message) => (
                 <Card key={message._id} className="w-5/6 min-w-[300px] shadow-xl">
                   <CardHeader className="w-5/6 ">
@@ -231,7 +237,9 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
               </form>
             </div>
 
-          </div>
+</div>
+
+          
         ) : null}
 
     </div>
