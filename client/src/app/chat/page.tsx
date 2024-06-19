@@ -151,8 +151,7 @@ async function sendMessage(e:React.FormEvent) {
       socket.emit('sendMessage',messageResult);
       socket.emit("stop typing",messageResult.chat._id)
     }
-  //  const getMessages = await fetch(`/api/messages?from=${userData?.userId}&to=${receiver}`)
-  //  const receivedMessages = await getMessages.json()
+  
     setMessages((messages) => [...messages,messageResult])
     setNewMessage("")
   } catch (err) {
@@ -181,7 +180,7 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
 };
 
   return (
-    <div className="min-h-[900px] bg-slate-400 relative">
+    <div className="min-h-[900px] bg-slate-600 relative">
         
         <h1>Chat Page</h1>
         <div className="absolute right-1 flex flex-wrap flex-col justify-center gap-2 p-2 bg-purple-50  min-w-[230px] h-3/6 items-center overflow-y-scroll rounded-md shadow-2xl">
@@ -205,14 +204,15 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
         </div>
 
         {isChatOpen ? (
-          <div className="bg-green-500 absolute bottom-0 w-3/6 h-2/6 overflow-y-scroll">
+          <div className="bg-orange-800 absolute bottom-2 left-2 w-3/6 min-w-[400px] h-2/6 overflow-y-scroll">
 
-            <div className="bg-blue-400 w-full p-2 flex flex-col items-center gap-2">
+            <div className="bg-orange-200 w-full  p-2 flex flex-col items-center gap-2">
               {messages.length > 0 && messages.map((message) => (
-                <Card key={message._id} className="w-5/6">
-                  <CardHeader>
-                    <CardTitle>{userData?.username === message.sender.username ? "You" : message.sender.username}</CardTitle>
-                    <CardDescription>{message.text}</CardDescription>
+                <Card key={message._id} className="w-5/6 min-w-[300px] shadow-xl">
+                  <CardHeader className="w-5/6 ">
+                    <CardTitle className="text-lg font-normal tracking-wider italic">{userData?.username === message.sender.username ? "You" : message.sender.username}</CardTitle>
+                    <hr />
+                    <CardDescription className="w-5/6 break-words text-left text-base text-slate-700">{message.text}</CardDescription>
                   </CardHeader>
                 </Card>
               ))}
@@ -224,7 +224,9 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
                 <Input type="text"
                  className="w-4/6 focus-visible:ring-1"
                  value={newMessage} 
-                 onChange={typingHandler} />
+                 onChange={typingHandler} 
+                 placeholder="Enter a message..."
+                 />
                 <Button type="submit" variant="default" className="m-3">Send</Button>
               </form>
             </div>
