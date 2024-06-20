@@ -180,9 +180,9 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
 };
 
   return (
-    <div className="min-h-[900px] bg-slate-600 relative">
+    <div className="min-h-[900px] bg-slate-500 relative">
         
-        <h1>Chat Page</h1>
+        <h1 className="text-2xl text-white text-center font-light uppercase p-2">click on a user from the list of users and start a chat</h1>
         <div className="absolute right-1 flex flex-wrap flex-col justify-center gap-2 p-2 bg-purple-50  min-w-[230px] h-3/6 items-center overflow-y-scroll rounded-md shadow-2xl">
         
         {users.length > 0 && users.map((user) => {
@@ -214,7 +214,7 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
               <Button className="fixed" onClick={() => setIsChatOpen(false)}>X</Button>
               </div>
               {messages.length > 0 && messages.map((message) => (
-                <Card key={message._id} className="w-5/6 min-w-[300px] shadow-xl">
+                <Card key={message._id} className="w-5/6 min-w-[300px] shadow-xl" style={ userData?.username === message.sender.username ? {backgroundColor: '#ADD8E6'} : {backgroundColor: "white"} }>
                   <CardHeader className="w-5/6 ">
                     <CardTitle className="text-lg font-normal tracking-wider italic">{userData?.username === message.sender.username ? "You" : message.sender.username}</CardTitle>
                     <hr />
