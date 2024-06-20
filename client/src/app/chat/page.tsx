@@ -21,7 +21,7 @@ interface User {
     __v: number;
 }
 
-interface UserData {
+export interface UserData {
   userId: string;
   username: string;
 }

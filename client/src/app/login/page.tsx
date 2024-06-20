@@ -35,7 +35,7 @@ const LoginPage = () => {
         
         await setActive({ session: signInAttempt.createdSessionId });
        
-        router.push('/chat');
+        
 
         const response = await fetch("/api/login",{
           method: "POST",
@@ -43,6 +43,7 @@ const LoginPage = () => {
         })
         const result = await response.json()
         localStorage.setItem("userData",JSON.stringify(result))
+        router.push('/chat');
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
