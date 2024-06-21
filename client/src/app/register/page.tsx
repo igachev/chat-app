@@ -3,6 +3,8 @@
 import * as React from 'react';
 import { useSignUp } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 
 
 export default function Page() {
@@ -94,32 +96,36 @@ export default function Page() {
   // Display the initial sign-up form to capture the email and password
   return (
     <>
-      <h1>Sign up</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Enter email address</label>
-          <input
+      <div className='min-h-[900px] bg-slate-500 text-white'>
+      <h1 className='text-center text-4xl py-2 font-light'>Sign up</h1>
+      <form onSubmit={handleSubmit} className='w-1/2 mx-auto p-2 bg-slate-400 flex flex-col items-center justify-center border rounded-md border-slate-600 shadow-2xl'>
+        <div className='my-2 p-1'>
+          <label htmlFor="email">Enter gmail address</label>
+          <Input
             id="email"
+            className='mt-2 text-black'
             type="email"
             name="email"
             value={emailAddress}
             onChange={(e) => setEmailAddress(e.target.value)}
           />
         </div>
-        <div>
+        <div className='my-2 p-1'>
           <label htmlFor="password">Enter password</label>
-          <input
+          <Input
             id="password"
+            className='mt-2 text-black'
             type="password"
             name="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <div>
+        <div className='my-2 p-1'>
           <label htmlFor="username">Enter username</label>
-          <input
+          <Input
             id="username"
+            className='mt-2 text-black'
             type="text"
             name="username"
             value={username}
@@ -127,9 +133,10 @@ export default function Page() {
           />
         </div>
         <div>
-          <button type="submit">Next</button>
+          <Button type="submit" variant="default">Next</Button>
         </div>
       </form>
+      </div>
     </>
   );
 }
