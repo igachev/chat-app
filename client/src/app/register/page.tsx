@@ -13,6 +13,10 @@ interface Errors {
   username: string;
 }
 
+interface VerifyError {
+  verification: string;
+}
+
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
   const [emailAddress, setEmailAddress] = React.useState('');
@@ -23,6 +27,8 @@ export default function Page() {
   const router = useRouter();
   const err = {gmail: "",password: "",username: ""}
   const [errors,setErrors] = useState<Errors>(err)
+  const verifyErr = {verification: ""}
+  const [verificationError,setVerificationError] = useState<VerifyError>(verifyErr)
 
   // Handle submission of the sign-up form
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,6 +86,20 @@ export default function Page() {
 
     if (!isLoaded) return;
 
+    const errObj = {...verifyErr}
+    let errorOccured = false;
+
+    if(code === '') {
+      errObj.verification = "verification code is required"
+      errorOccured = true;
+    }
+
+    setVerificationError(errObj)
+
+    if(errorOccured) {
+      return;
+    }
+
     try {
       // Use the code the user provided to attempt verification
       const completeSignUp = await signUp.attemptEmailAddressVerification({
@@ -109,19 +129,21 @@ export default function Page() {
   // Display the verification form to capture the OTP code
   if (verifying) {
     return (
-      <>
-        <h1>Verify your email</h1>
-        <form onSubmit={handleVerify}>
+      <div className='min-h-[900px] bg-slate-500 text-white'>
+        <h1 className='text-center text-4xl py-2 font-light'>Verify your email</h1>
+        <form onSubmit={handleVerify} className='flex flex-col items-center gap-2'>
           <label id="code">Enter your verification code</label>
-          <input
+          <Input
             value={code}
             id="code"
             name="code"
             onChange={(e) => setCode(e.target.value)}
+            className='text-black w-2/6'
           />
-          <button type="submit">Verify</button>
+          {verificationError.verification && (<p className='text-red-300 mt-2 text-center'>{verificationError.verification}</p>)}
+          <Button type="submit" variant="default">Verify</Button>
         </form>
-      </>
+      </div>
     );
   }
 
