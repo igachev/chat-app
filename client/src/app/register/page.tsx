@@ -5,7 +5,13 @@ import { useSignUp } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
 
+interface Errors {
+  gmail: string;
+  password: string;
+  username: string;
+}
 
 export default function Page() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -15,12 +21,38 @@ export default function Page() {
   const [verifying, setVerifying] = React.useState(false);
   const [code, setCode] = React.useState('');
   const router = useRouter();
+  const err = {gmail: "",password: "",username: ""}
+  const [errors,setErrors] = useState<Errors>(err)
 
   // Handle submission of the sign-up form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!isLoaded) return;
+
+    const errorObj = {...err}
+    let errorOccured = false;
+
+    if(emailAddress === '') {
+      errorObj.gmail = 'Gmail is required'
+      errorOccured = true;
+    }
+
+    if(password === '') {
+      errorObj.password = "Password is required"
+      errorOccured = true;
+    }
+
+    if(username === '') {
+      errorObj.username = "Username is required"
+      errorOccured = true;
+    }
+
+    setErrors(errorObj)
+
+    if(errorOccured) {
+      return;
+    }
 
     // Start the sign-up process using the email and password provided
     try {
@@ -109,6 +141,7 @@ export default function Page() {
             value={emailAddress}
             onChange={(e) => setEmailAddress(e.target.value)}
           />
+          {errors.gmail && (<p className='text-red-700 mt-2 text-center'>{errors.gmail}</p>)}
         </div>
         <div className='my-2 p-1'>
           <label htmlFor="password">Enter password</label>
@@ -120,6 +153,7 @@ export default function Page() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {errors.password && (<p className='text-red-700 mt-2 text-center'>{errors.password}</p>)}
         </div>
         <div className='my-2 p-1'>
           <label htmlFor="username">Enter username</label>
@@ -131,6 +165,7 @@ export default function Page() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
+          {errors.username && (<p className='text-red-700 mt-2 text-center'>{errors.username}</p>)}
         </div>
         <div>
           <Button type="submit" variant="default">Next</Button>
