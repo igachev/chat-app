@@ -110,11 +110,13 @@ export default function Page() {
       // and redirect the user
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
-        await fetch("/api/register",{
+        const response = await fetch("/api/register",{
             method: 'POST',
             body: JSON.stringify({email:emailAddress,password:password,username:username})
         })
-        router.push('/');
+        const result = await response.json()
+        localStorage.setItem("userData",JSON.stringify(result))
+        router.push('/chat');
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
