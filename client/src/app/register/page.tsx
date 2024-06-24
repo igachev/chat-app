@@ -22,6 +22,7 @@ export default function Page() {
   const [emailAddress, setEmailAddress] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [username, setUsername] = React.useState('')
+  const [file,setFile] = useState<File>()
   const [verifying, setVerifying] = React.useState(false);
   const [code, setCode] = React.useState('');
   const router = useRouter();
@@ -110,9 +111,14 @@ export default function Page() {
       // and redirect the user
       if (completeSignUp.status === 'complete') {
         await setActive({ session: completeSignUp.createdSessionId });
+        const data: any = new FormData()
+        data.set("email",emailAddress)
+        data.set("password",password)
+        data.set("username",username)
+        data.set("file",file)
         const response = await fetch("/api/register",{
             method: 'POST',
-            body: JSON.stringify({email:emailAddress,password:password,username:username})
+            body: data
         })
         const result = await response.json()
         localStorage.setItem("userData",JSON.stringify(result))
@@ -190,6 +196,16 @@ export default function Page() {
             onChange={(e) => setUsername(e.target.value)}
           />
           {errors.username && (<p className='text-red-700 mt-2 text-center'>{errors.username}</p>)}
+        </div>
+        <div className='my-2 p-1'>
+        <label htmlFor="file">Profile Picture</label>
+        <Input 
+        id='file'
+        className='mt-2 text-black'
+        type='file'
+        name='file'
+        onChange={(e) => setFile(e.target.files?.[0])}
+        />
         </div>
         <div>
           <Button type="submit" variant="default">Next</Button>
