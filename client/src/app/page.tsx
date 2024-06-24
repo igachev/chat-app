@@ -1,5 +1,3 @@
-
-
 export default function Home() {
   return (
     <div className="bg-slate-500 min-h-[900px] text-white text-center pt-4">

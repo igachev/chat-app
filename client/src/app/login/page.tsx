@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 const LoginPage = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = React.useState('');
