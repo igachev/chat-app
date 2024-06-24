@@ -45,7 +45,6 @@ const [receiver,setReceiver] = useState<string>("")
 const [isConnected, setIsConnected] = useState(false);
 const [transport, setTransport] = useState("N/A");
 const [typing,setTyping] = useState<boolean>(false)
-// currentUserIsTyping is used to 
 const [currentUserIsTyping,setCurrentUserIsTyping] = useState<boolean>(false)
 const [selectedChatId,setSelectedChatId] = useState<string>("")
 const [toUser,setToUser] = useState<string>("")
@@ -191,7 +190,9 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
             <Card key={user._id} className="min-w-[200px] cursor-pointer" onClick={() => openChat(user._id)}>
               <CardHeader>
                 <CardTitle>{user.username}</CardTitle>
-                <CardDescription className=""><img src={user.profileImage} width={50} height={50} alt="profile-image" /></CardDescription>
+                <CardDescription className="">
+                  <img src={user.profileImage.startsWith("https://upload") == true ? user.profileImage : `/uploads/${user.profileImage}`} width={50} height={50} alt="profile-image" />
+                  </CardDescription>
               </CardHeader>
             </Card>
             )
