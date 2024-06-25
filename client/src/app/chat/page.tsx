@@ -49,6 +49,7 @@ const [currentUserIsTyping,setCurrentUserIsTyping] = useState<boolean>(false)
 const [selectedChatId,setSelectedChatId] = useState<string>("")
 const [toUser,setToUser] = useState<string>("")
 
+
 useEffect(() => {
   const userDataString = localStorage?.getItem("userData");
   if (userDataString) {
@@ -214,7 +215,7 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
               <div className="w-full flex justify-end">
               <Button className="fixed" onClick={() => setIsChatOpen(false)}>X</Button>
               </div>
-              {messages.length > 0 && messages.map((message) => (
+              {messages.length > 0 && messages.map((message) => (  
                 <Card key={message._id} className="w-5/6 min-w-[300px] shadow-xl" style={ userData?.username === message.sender.username ? {backgroundColor: '#ADD8E6'} : {backgroundColor: "white"} }>
                   <CardHeader className="w-5/6 ">
                     <CardTitle className="text-lg font-normal tracking-wider italic">{userData?.username === message.sender.username ? "You" : message.sender.username}</CardTitle>

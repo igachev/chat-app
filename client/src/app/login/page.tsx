@@ -34,14 +34,15 @@ const LoginPage = () => {
         
         await setActive({ session: signInAttempt.createdSessionId });
        
-        
-
         const response = await fetch("/api/login",{
           method: "POST",
           body: JSON.stringify({email,password})
         })
+        
         const result = await response.json()
         localStorage.setItem("userData",JSON.stringify(result))
+        // Dispatch custom event
+        window.dispatchEvent(new Event('userDataChanged'));
         router.push('/chat');
       } else {
         // If the status is not complete, check why. User may need to
