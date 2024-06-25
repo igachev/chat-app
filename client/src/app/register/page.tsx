@@ -122,6 +122,8 @@ export default function Page() {
         })
         const result = await response.json()
         localStorage.setItem("userData",JSON.stringify(result))
+        // Dispatch custom event
+        window.dispatchEvent(new Event('userDataChanged'));
         router.push('/chat');
       } else {
         // If the status is not complete, check why. User may need to
