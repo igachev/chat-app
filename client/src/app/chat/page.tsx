@@ -1,19 +1,12 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-  } from "@/components/ui/card"
-import { Input } from "@/components/ui/input";
 
 import io from 'socket.io-client';
 import { ChangeEvent, useEffect, useState } from "react";
+import UserList from "@/components/UserList";
+import UserMessages from "@/components/UserMessages";
+import SendMessageForm from "@/components/SendMessageForm";
 
-interface User {
+export interface User {
     _id: string;
     email: string;
     username: string;
@@ -26,7 +19,7 @@ export interface UserData {
   username: string;
 }
 
-interface Messages {
+export interface Messages {
   _id: string;
   sender: {_id: string; username: string};
   text: string;
@@ -179,30 +172,13 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
   }, timerLength);
 };
 
+
   return (
     <div className="min-h-[900px] bg-slate-500 relative">
         
         <h1 className="text-2xl text-white text-center font-light uppercase p-2">click on a user from the list of users and start a chat</h1>
         <div className="absolute right-1 flex flex-wrap flex-col justify-center gap-2 p-2 bg-purple-50  min-w-[230px] h-3/6 items-center overflow-y-scroll rounded-md shadow-2xl">
-        
-        {users.length > 0 && users.map((user) => {
-           if(user._id !== userData?.userId) {
-            return (
-            <Card key={user._id} className="min-w-[200px] cursor-pointer" onClick={() => openChat(user._id)}>
-              <CardHeader>
-                <CardTitle>{user.username}</CardTitle>
-                <CardDescription className="">
-                  <img src={user.profileImage.startsWith("https://upload") == true ? user.profileImage : `/uploads/${user.profileImage}`} width={50} height={50} alt="profile-image" />
-                  </CardDescription>
-              </CardHeader>
-            </Card>
-            )
-           }
-           else {
-            return null;
-           }
-        })}
-
+        <UserList users={users} openChat={openChat} userData={userData} />
         </div>
 
         {isChatOpen ? (
@@ -210,38 +186,15 @@ const typingHandler = (e: ChangeEvent<HTMLInputElement>) => {
 
 <div className="bg-orange-800 absolute bottom-2 left-2 w-3/6 min-w-[400px] h-2/6 overflow-y-scroll">
             
-            <div className="bg-orange-200 w-full p-2 flex flex-col items-center gap-2">
+            <UserMessages messages={messages} userData={userData} setIsChatOpen={setIsChatOpen} />
             
-              <div className="w-full flex justify-end">
-              <Button className="fixed" onClick={() => setIsChatOpen(false)}>X</Button>
-              </div>
-              {messages.length > 0 && messages.map((message) => (  
-                <Card key={message._id} className="w-5/6 min-w-[300px] shadow-xl" style={ userData?.username === message.sender.username ? {backgroundColor: '#ADD8E6'} : {backgroundColor: "white"} }>
-                  <CardHeader className="w-5/6 ">
-                    <CardTitle className="text-lg font-normal tracking-wider italic">{userData?.username === message.sender.username ? "You" : message.sender.username}</CardTitle>
-                    <hr />
-                    <CardDescription className="w-5/6 break-words text-left text-base text-slate-700">{message.text}</CardDescription>
-                  </CardHeader>
-                </Card>
-              ))}
-            </div>
-
             <div className="w-4/6 m-2">
             {currentUserIsTyping && toUser && <div>{toUser} is typing...</div>}
-              <form method="post" onSubmit={sendMessage}>
-                <Input type="text"
-                 className="w-4/6 focus-visible:ring-1"
-                 value={newMessage} 
-                 onChange={typingHandler} 
-                 placeholder="Enter a message..."
-                 />
-                <Button type="submit" variant="default" className="m-3">Send</Button>
-              </form>
+            <SendMessageForm sendMessage={sendMessage} newMessage={newMessage} typingHandler={typingHandler} />
             </div>
 
 </div>
-
-          
+ 
         ) : null}
 
     </div>
