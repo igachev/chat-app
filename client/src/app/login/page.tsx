@@ -83,25 +83,25 @@ const LoginPage = () => {
   
 
   return (
-    <div className="min-h-[900px] bg-slate-500 p-3">
-        <h1 className="text-center mb-2">Login Page</h1>
+    <div className="min-h-[900px] bg-slate-500 p-5">
+        <h1 className="text-center mb-2 text-white text-5xl font-light">Login Page</h1>
 
-        <form method="post" onSubmit={handleSubmit}>
+        <form method="post" onSubmit={handleSubmit} className='flex flex-col justify-center min-h-[500px] border border-black rounded-md shadow-inner bg-slate-400'>
 
-    <div className="flex items-center gap-2 mb-2">
-    <Label className="w-1/6" htmlFor="email">Email:</Label>
-    <Input type="text" className="w-1/3" name="email" onChange={(e) => setEmail(e.target.value)} />
+    <div className="flex justify-center items-center gap-2 mb-2 ">
+    <Label className="mr-7 text-white font-normal text-1xl" htmlFor="email">Email:</Label>
+    <Input type="text" className="w-2/6" name="email" onChange={(e) => setEmail(e.target.value)} />
     {errors.email && <p className='text-red-700 mt-2 text-center'>{errors.email}</p>}
     </div>
     
-    <div className="flex items-center gap-2 mb-2">
-    <Label className="w-1/6" htmlFor="password">Password:</Label>
-    <Input type="password" className="w-1/3" name="password" onChange={(e) => setPassword(e.target.value)} />
+    <div className="flex justify-center items-center gap-2 mb-2 ">
+    <Label className="text-white font-normal text-1xl" htmlFor="password">Password:</Label>
+    <Input type="password" className="w-2/6" name="password" onChange={(e) => setPassword(e.target.value)} />
     {errors.password && <p className='text-red-700 mt-2 text-center'>{errors.password}</p>}
     </div>
     
 
-    <div className="text-center">
+    <div className="flex justify-center mt-2">
     <Button type="submit" variant="default">Button</Button>
     </div>
 
