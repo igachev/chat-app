@@ -7,10 +7,17 @@ import { Button } from "@/components/ui/button"
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+interface ValidationError {
+  email: string;
+  password: string;
+}
+
 const LoginPage = () => {
   const { isLoaded, signIn, setActive } = useSignIn();
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const error: ValidationError = {email: '', password: ''}
+  const [errors,setErrors] = useState<ValidationError>(error)
   const router = useRouter()
 
    // Handle the submission of the sign-in form
@@ -18,6 +25,25 @@ const LoginPage = () => {
     e.preventDefault();
 
     if (!isLoaded) {
+      return;
+    }
+
+    const validationError: ValidationError = {...error};
+    let errorOccured: boolean = false;
+
+    if(email === '') {
+      validationError.email = 'Email is required'
+      errorOccured = true;
+    }
+
+    if(password === '') {
+      validationError.password = 'Password is required'
+      errorOccured = true;
+    }
+
+    setErrors(validationError)
+
+    if(errorOccured) {
       return;
     }
 
@@ -57,7 +83,7 @@ const LoginPage = () => {
   
 
   return (
-    <div className="w-1/3 bg-red-300 p-3">
+    <div className="min-h-[900px] bg-slate-500 p-3">
         <h1 className="text-center mb-2">Login Page</h1>
 
         <form method="post" onSubmit={handleSubmit}>
@@ -65,12 +91,15 @@ const LoginPage = () => {
     <div className="flex items-center gap-2 mb-2">
     <Label className="w-1/6" htmlFor="email">Email:</Label>
     <Input type="text" className="w-1/3" name="email" onChange={(e) => setEmail(e.target.value)} />
+    {errors.email && <p className='text-red-700 mt-2 text-center'>{errors.email}</p>}
     </div>
-
+    
     <div className="flex items-center gap-2 mb-2">
     <Label className="w-1/6" htmlFor="password">Password:</Label>
     <Input type="password" className="w-1/3" name="password" onChange={(e) => setPassword(e.target.value)} />
+    {errors.password && <p className='text-red-700 mt-2 text-center'>{errors.password}</p>}
     </div>
+    
 
     <div className="text-center">
     <Button type="submit" variant="default">Button</Button>
