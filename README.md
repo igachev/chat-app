@@ -1,5 +1,10 @@
 # Chat Application
 
+
+## Purpose of this application:
+<h3>Single chat with text messages.Communication with other users.</h3>
+
+
 ## What I learned and practiced in this project:
 - `next.js`
 - `next.js client-side and server-side rendering`
@@ -42,3 +47,12 @@ To run the application execute the following steps:
 3. Go to folder client: `cd client`
 4. Install dependencies: `npm install`
 5. Start the app: `npm run dev`
+
+
+## Endpoints:
+- `POST /api/register` : <span>creates new user</span>
+- `POST /api/login` : <span>sign in existing user</span>
+- `GET /api/users` : <span>returns all existing users</span>
+- `POST /api/users?from= &to= ` : <span>creates new chat between two users or returns the chat if it already exists</span>
+- `GET /api/messages?from= &to= ` : <span>returns all messages exchanged between the two users</span>
+- `POST /api/messages` : <span>creates new message in the chat</span>
