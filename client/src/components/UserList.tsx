@@ -23,7 +23,7 @@ userData
            <CardHeader>
              <CardTitle>{user.username}</CardTitle>
              <CardDescription className="">
-               <img src={user.profileImage.startsWith("https://upload") == true ? user.profileImage : `/uploads/${user.profileImage}`} width={50} height={50} alt="profile-image" />
+               <img src={`/uploads/${user.profileImage}`} width={50} height={50} alt="profile-image" />
                </CardDescription>
            </CardHeader>
          </Card>

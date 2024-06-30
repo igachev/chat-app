@@ -18,11 +18,12 @@ export const POST = async(req:NextRequest,res: any) => {
     const password = data.get('password')
     const username = data.get('username')
     const file: File | null = data.get('file') as unknown as File
+    let uniqueFileName;
     if(file) {
         const bytes = await file.arrayBuffer()
         const buffer = Buffer.from(bytes)
         const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-        const uniqueFileName = `${Date.now()}-${file.name}`;
+        uniqueFileName = `${Date.now()}-${file.name}`;
         const filePath = path.join(uploadDir, uniqueFileName);
         
         if(!fs.existsSync(uploadDir)) {
@@ -40,7 +41,7 @@ export const POST = async(req:NextRequest,res: any) => {
             throw new Error("User already exists!")
         }
 
-        const newUser = new User({email,password,username,profileImage:file.name})
+        const newUser = new User({email,password,username,profileImage:uniqueFileName})
         await newUser.save()
         const userData: UserData = {userId: newUser._id, username: newUser.username}
         return new Response(JSON.stringify(userData), {status: 201})
